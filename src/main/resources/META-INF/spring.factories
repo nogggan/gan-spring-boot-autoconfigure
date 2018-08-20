@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.gan.spring.boot.autoconfigure.druid.DruidDataSourceAutoConfiguration,\
+org.gan.spring.boot.autoconfigure.redis.UserRedisAutoConfiguration
