@@ -105,5 +105,16 @@ public class RedisService {
 			jedis.close();
 		}
 	}
+	
+	public void clear() {
+		Jedis jedis = jedisPool.getResource();
+		try {
+			jedis.flushDB();
+		} catch (Exception e) {
+			log.error(String.format("RedisService--> clear()方法 发生了异常:%s",e));
+		}finally {
+			jedis.close();
+		}
+	}
 
 }
