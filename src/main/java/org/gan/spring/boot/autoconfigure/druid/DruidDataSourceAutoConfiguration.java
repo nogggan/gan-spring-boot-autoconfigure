@@ -41,7 +41,7 @@ public class DruidDataSourceAutoConfiguration {
 		dataSource.setPassword(properties.getPassword());
 		dataSource.setUrl(properties.getUrl());
 		dataSource.setDriverClassName(properties.getDriverClassName());
-		dataSource.setFilters("stat");
+		dataSource.setFilters("stat,wall");
 		dataSource.setProxyFilters(Arrays.asList(stat));
 		return dataSource;
 	}
