@@ -51,7 +51,8 @@ public class RedisService {
 		try {
 			String realKey = key.prefix()+name;
 			String value = jedis.get(realKey);
-			t = JSONObject.parseObject(value, clazz);
+			if(!StringUtils.isEmpty(value))
+				t = JSONObject.parseObject(value, clazz);
 		} catch (Exception e) {
 			log.error(String.format("RedisService--> set()方法 name:%s==>发生了异常:%s", name,e));
 		}finally {
