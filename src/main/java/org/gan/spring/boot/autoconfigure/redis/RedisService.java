@@ -1,5 +1,7 @@
 package org.gan.spring.boot.autoconfigure.redis;
 
+import java.util.List;
+
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -54,7 +56,25 @@ public class RedisService {
 			if(!StringUtils.isEmpty(value))
 				t = JSONObject.parseObject(value, clazz);
 		} catch (Exception e) {
-			log.error(String.format("RedisService--> set()方法 name:%s==>发生了异常:%s", name,e));
+			log.error(String.format("RedisService--> get()方法 name:%s==>发生了异常:%s", name,e));
+		}finally {
+			jedis.close();
+		}
+		return t;
+	}
+	
+	public <T> List<T> getList(RedisKey key,String name,Class<T> clazz) {
+		if(StringUtils.isEmpty(name) || clazz==null)
+			return null;
+		Jedis jedis = jedisPool.getResource();
+		List<T> t = null;
+		try {
+			String realKey = key.prefix()+name;
+			String value = jedis.get(realKey);
+			if(!StringUtils.isEmpty(value))
+				t = JSONObject.parseArray(value, clazz);
+		} catch (Exception e) {
+			log.error(String.format("RedisService--> getList()方法 name:%s==>发生了异常:%s", name,e));
 		}finally {
 			jedis.close();
 		}
@@ -69,7 +89,7 @@ public class RedisService {
 			String realKey = key.prefix()+name;
 			return jedis.incr(realKey);
 		} catch (Exception e) {
-			log.error(String.format("RedisService--> set()方法 name:%s==>发生了异常:%s", name,e));
+			log.error(String.format("RedisService--> incr()方法 name:%s==>发生了异常:%s", name,e));
 		}finally {
 			jedis.close();
 		}
@@ -84,7 +104,7 @@ public class RedisService {
 			String realKey = key.prefix()+name;
 			return jedis.decr(realKey);
 		} catch (Exception e) {
-			log.error(String.format("RedisService--> set()方法 name:%s==>发生了异常:%s", name,e));
+			log.error(String.format("RedisService--> decr()方法 name:%s==>发生了异常:%s", name,e));
 		}finally {
 			jedis.close();
 		}
@@ -93,7 +113,7 @@ public class RedisService {
 	
 	public void del(RedisKey key,String name) {
 		if(StringUtils.isEmpty(name)) {
-			log.debug(String.format("RedisService--> set()方法 参数key不能为空，传入的key为%s", name));
+			log.debug(String.format("RedisService--> del()方法 参数key不能为空，传入的key为%s", name));
 			throw new NullPointerException(String.format("RedisService--> set()方法 参数key不能为空，传入的key为%s", name));
 		}
 		Jedis jedis = jedisPool.getResource();
@@ -101,7 +121,7 @@ public class RedisService {
 			String realKey = key.prefix()+name;
 			jedis.del(realKey);
 		} catch (Exception e) {
-			log.error(String.format("RedisService--> set()方法 name:%s==>发生了异常:%s", name,e));
+			log.error(String.format("RedisService--> del()方法 name:%s==>发生了异常:%s", name,e));
 		}finally {
 			jedis.close();
 		}
